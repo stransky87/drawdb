@@ -106,6 +106,11 @@ export const DB = {
   GENERIC: "generic",
 };
 
+export const ErrorType = {
+  DIAGRAM: "diagram",
+  DBML: "dbml",
+};
+
 export const IMPORT_FROM = {
   JSON: 0,
   DBML: 1,

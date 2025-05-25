@@ -67,7 +67,7 @@
   background-color: rgba(var(--semi-blue-6), 1);
 }
 
-.semi-spin-wrapper{
+.semi-spin-wrapper {
   color: inherit;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .toolbar-theme {
-  background-color: rgba(var(--semi-grey-1), 1);
+  background-color: rgba(var(--semi-grey-1), 0.7);
 }
 
 .hover-1:hover {
