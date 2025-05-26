@@ -61,4 +61,19 @@ docker build -t drawdb .
 docker run -p 3000:80 drawdb
 ```
 
+### Docker Compose
+
+docker-compose.yml
+```txt
+...
+    ports:
+      - "41200:80"
+...
+```
+
+
+```bash
+docker compose -f docker-compose.yml up -d --build
+```
+
 If you wish to work with sharing, set up [server](https://github.com/drawdb-io/drawdb-server) and environment variables according to `.env.sample`. This is not required unless you want to share files.

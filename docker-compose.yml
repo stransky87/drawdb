@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  drawdb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: drawdb
+    ports:
+      - "41200:80"
