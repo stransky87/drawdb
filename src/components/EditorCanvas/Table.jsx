@@ -64,9 +64,9 @@ export default function Table(props) {
   });
   const maxFieldDescLength = Math.max(...fieldDescLengths);
   const maxWidth =
-    Math.max(tableData.name.length, maxFieldDescLength) + 50;
+    Math.max(tableData.name.length, maxFieldDescLength);
   console.log(maxWidth, settings.tableWidth);
-  const width = Math.max(settings.tableWidth, maxWidth);
+  const width = Math.min(settings.tableWidth, maxWidth);
 
 
   const isSelected = useMemo(() => {
@@ -325,7 +325,11 @@ export default function Table(props) {
           index === tableData.fields.length - 1
             ? ""
             : "border-b border-gray-400"
-        } group h-[36px] px-2 py-1 flex justify-between items-center gap-1 w-full overflow-hidden`}
+        } group ${
+          settings.showComments
+            ? "min-h-[36px]"
+            : "h-[36px]"
+        } px-2 py-1 flex justify-between items-center gap-1 w-full overflow-hidden`}
         onPointerEnter={(e) => {
           if (!e.isPrimary) return;
 
@@ -388,15 +392,17 @@ export default function Table(props) {
         </div>
         <div className="text-zinc-400">
           {hoveredField === index ? (
-            <Button
-              theme="solid"
-              size="small"
-              style={{
-                backgroundColor: "#d42020b3",
-              }}
-              icon={<IconMinus />}
-              onClick={() => deleteField(fieldData, tableData.id)}
-            />
+			settings.showIconMinus ? (
+				<Button
+				  theme="solid"
+				  size="small"
+				  style={{
+					backgroundColor: "#d42020b3",
+				  }}
+				  icon={<IconMinus />}
+				  onClick={() => deleteField(fieldData, tableData.id)}
+				/>
+			) : null
           ) : settings.showDataTypes ? (
             <div className="flex gap-1 items-center">
               {fieldData.primary && <IconKeyStroked />}
@@ -416,6 +422,17 @@ export default function Table(props) {
               </span>
             </div>
           ) : null}
+        </div>
+		<div
+          className={`${
+            hoveredField === index ? "text-zinc-400" : ""
+          } flex items-center gap-2 overflow-hidden`}
+        >
+          {settings.showComments ? (
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            {fieldData.comment}
+          </span>
+		  ) : null}
         </div>
       </div>
     );

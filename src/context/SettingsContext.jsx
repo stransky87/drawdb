@@ -6,6 +6,8 @@ const defaultSettings = {
   showFieldSummary: true,
   showGrid: true,
   showDataTypes: true,
+  showIconMinus: false,
+  showComments: false,
   mode: "light",
   autosave: true,
   panning: true,

@@ -1275,6 +1275,29 @@ export default function ControlPanel({
             showDataTypes: !prev.showDataTypes,
           })),
       },
+	  show_iconminus: {
+        state: settings.showIconMinus ? (
+          <i className="bi bi-toggle-on" />
+        ) : (
+          <i className="bi bi-toggle-off" />
+        ),
+        function: () =>
+          setSettings((prev) => ({
+            ...prev,
+            showIconMinus: !prev.showIconMinus,
+          })),
+	  show_comments: {
+        state: settings.showComments ? (
+          <i className="bi bi-toggle-on" />
+        ) : (
+          <i className="bi bi-toggle-off" />
+        ),
+        function: () =>
+          setSettings((prev) => ({
+            ...prev,
+            showComments: !prev.showComments,
+          })),
+      },
       show_grid: {
         state: settings.showGrid ? (
           <i className="bi bi-toggle-on" />
