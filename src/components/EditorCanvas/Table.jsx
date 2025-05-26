@@ -46,6 +46,29 @@ export default function Table(props) {
   const height =
     tableData.fields.length * tableFieldHeight + tableHeaderHeight + 7;
 
+  const fieldDescLengths = tableData.fields.map((e, i) => {
+    const nameSize = e.name.length * 10;
+
+    const typeSize =
+      `${
+        e.type +
+        ((dbToTypes[database][e.type].isSized ||
+          dbToTypes[database][e.type].hasPrecision) &&
+        e.size &&
+        e.size !== ""
+          ? "(" + e.size + ")"
+          : "")
+      }`.length * 13;
+
+    return nameSize + typeSize;
+  });
+  const maxFieldDescLength = Math.max(...fieldDescLengths);
+  const maxWidth =
+    Math.max(tableData.name.length, maxFieldDescLength) + 50;
+  console.log(maxWidth, settings.tableWidth);
+  const width = Math.max(settings.tableWidth, maxWidth);
+
+
   const isSelected = useMemo(() => {
     return (
       (selectedElement.id == tableData.id &&
@@ -85,7 +108,7 @@ export default function Table(props) {
         key={tableData.id}
         x={tableData.x}
         y={tableData.y}
-        width={settings.tableWidth}
+        width={width}
         height={height}
         className="group drop-shadow-lg rounded-md cursor-move"
         onPointerDown={onPointerDown}
