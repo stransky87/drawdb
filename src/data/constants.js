@@ -14,7 +14,7 @@ export const vectorColor = "text-slate-500";
 export const otherColor = "text-zinc-500";
 export const dateColor = "text-cyan-500";
 export const tableHeaderHeight = 50;
-export const tableWidth = 700;
+export const tableWidth = 500;
 export const tableFieldHeight = 36;
 export const tableColorStripHeight = 7;
 

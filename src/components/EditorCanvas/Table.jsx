@@ -59,14 +59,14 @@ export default function Table(props) {
           ? "(" + e.size + ")"
           : "")
       }`.length * 13;
-
+    
+    //console.log(nameSize, typeSize);
     return nameSize + typeSize;
   });
   const maxFieldDescLength = Math.max(...fieldDescLengths);
-  const maxWidth =
-    Math.max(tableData.name.length, maxFieldDescLength);
-  console.log(maxWidth, settings.tableWidth);
-  const width = Math.min(settings.tableWidth, maxWidth);
+  const maxWidth = Math.max(tableData.name.length, maxFieldDescLength);
+  //console.log(maxWidth, settings.tableWidth);
+  const width = Math.max(Math.min(settings.tableWidth, maxWidth), 180);
 
 
   const isSelected = useMemo(() => {
@@ -110,7 +110,7 @@ export default function Table(props) {
         y={tableData.y}
         width={width}
         height={height}
-        className="group drop-shadow-lg rounded-md cursor-move"
+        className="group drop-shadow-lg rounded-md cursor-move auto-resize"
         onPointerDown={onPointerDown}
       >
         <div
@@ -329,7 +329,11 @@ export default function Table(props) {
           settings.showComments
             ? "min-h-[36px]"
             : "h-[36px]"
-        } px-2 py-1 flex justify-between items-center gap-1 w-full overflow-hidden`}
+        } px-2 py-1 flex ${
+          settings.showComments
+            ? "flex-wrap"
+            : ""
+        } justify-between items-center gap-1 overflow-hidden`}
         onPointerEnter={(e) => {
           if (!e.isPrimary) return;
 
@@ -390,19 +394,21 @@ export default function Table(props) {
             {fieldData.name}
           </span>
         </div>
-        <div className="text-zinc-400">
-          {hoveredField === index ? (
-			settings.showIconMinus ? (
-				<Button
-				  theme="solid"
-				  size="small"
-				  style={{
-					backgroundColor: "#d42020b3",
-				  }}
-				  icon={<IconMinus />}
-				  onClick={() => deleteField(fieldData, tableData.id)}
-				/>
-			) : null
+        <div className={`text-zinc-400 ${
+            settings.showComments
+              ? "box-border"
+              : ""
+          }`}>
+          {hoveredField === index && settings.showIconMinus ? (
+			<Button
+			  theme="solid"
+			  size="small"
+			  style={{
+				backgroundColor: "#d42020b3",
+			  }}
+			  icon={<IconMinus />}
+			  onClick={() => deleteField(fieldData, tableData.id)}
+			/>
           ) : settings.showDataTypes ? (
             <div className="flex gap-1 items-center">
               {fieldData.primary && <IconKeyStroked />}
@@ -426,10 +432,14 @@ export default function Table(props) {
 		<div
           className={`${
             hoveredField === index ? "text-zinc-400" : ""
-          } flex items-center gap-2 overflow-hidden`}
+          } flex items-center gap-2 overflow-hidden ${
+            settings.showComments
+              ? "w-full box-border"
+              : ""
+          }`}
         >
           {settings.showComments ? (
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+          <span className="overflow-hidden text-ellipsis">
             {fieldData.comment}
           </span>
 		  ) : null}

@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-ENV NODE_OPTIONS="--max-old-space-size=2560"
+ENV NODE_OPTIONS="--max-old-space-size=2200"
 RUN npm run build
 
 # Stage 2: Setup the Nginx Server to serve the app

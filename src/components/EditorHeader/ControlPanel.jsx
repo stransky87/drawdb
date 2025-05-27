@@ -1286,6 +1286,7 @@ export default function ControlPanel({
             ...prev,
             showIconMinus: !prev.showIconMinus,
           })),
+      },
 	  show_comments: {
         state: settings.showComments ? (
           <i className="bi bi-toggle-on" />
