@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useForeignObjectAutoResize } from "../../hooks/useForeignObjectAutoResize";
 import {
   Action,
   Cardinality,
@@ -31,6 +32,8 @@ import { getRectFromEndpoints, isInsideRect } from "../../utils/rect";
 
 export default function Canvas() {
   const { t } = useTranslation();
+  
+  useForeignObjectAutoResize();
 
   const canvasRef = useRef(null);
   const canvasContextValue = useCanvas();

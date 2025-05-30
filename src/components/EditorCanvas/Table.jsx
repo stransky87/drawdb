@@ -47,7 +47,7 @@ export default function Table(props) {
     tableData.fields.length * tableFieldHeight + tableHeaderHeight + 7;
 
   const fieldDescLengths = tableData.fields.map((e, i) => {
-    const nameSize = e.name.length * 10;
+    const nameSize = e.name.length * 12;
 
     const typeSize =
       `${
@@ -326,11 +326,11 @@ export default function Table(props) {
             ? ""
             : "border-b border-gray-400"
         } group ${
-          settings.showComments
+          settings.showComments && fieldData.comment
             ? "min-h-[36px]"
             : "h-[36px]"
         } px-2 py-1 flex ${
-          settings.showComments
+          settings.showComments && fieldData.comment
             ? "flex-wrap"
             : ""
         } justify-between items-center gap-1 overflow-hidden`}
@@ -358,6 +358,11 @@ export default function Table(props) {
           e.target.releasePointerCapture(e.pointerId);
         }}
       >
+        <div id={fieldData.id}
+          className={`${
+            hoveredField === index ? "text-zinc-400" : ""
+          } flex items-center justify-between gap-2 overflow-hidden w-full box-border`}
+        >
         <div
           className={`${
             hoveredField === index ? "text-zinc-400" : ""
@@ -395,7 +400,7 @@ export default function Table(props) {
           </span>
         </div>
         <div className={`text-zinc-400 ${
-            settings.showComments
+            settings.showComments && fieldData.comment
               ? "box-border"
               : ""
           }`}>
@@ -429,21 +434,18 @@ export default function Table(props) {
             </div>
           ) : null}
         </div>
+        </div>
+        {settings.showComments && fieldData.comment ? (
 		<div
           className={`${
-            hoveredField === index ? "text-zinc-400" : ""
-          } flex items-center gap-2 overflow-hidden ${
-            settings.showComments
-              ? "w-full box-border"
-              : ""
-          }`}
+            hoveredField === index ? "text-gray-400" : "text-gray-500"
+          } text-xs font-sans tracking-tighter leading-snug h-auto min-h-0 flex items-center justify-center text-center px-0 py-0 overflow-hidden w-full box-border`}
         >
-          {settings.showComments ? (
           <span className="overflow-hidden text-ellipsis">
             {fieldData.comment}
           </span>
-		  ) : null}
         </div>
+        ) : null}
       </div>
     );
   }

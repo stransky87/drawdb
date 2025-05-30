@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Cardinality,
   darkBgTheme,
@@ -19,14 +19,16 @@ export default function Relationship({ data }) {
   const { layout } = useLayout();
   const { selectedElement, setSelectedElement } = useSelect();
   const { t } = useTranslation();
-
-  const pathValues = useMemo(() => {
+  
+  const [pathValues, setPathValues] = useState(null);
+  
+  useEffect(() => {
     const startTable = tables.find((t) => t.id === data.startTableId);
     const endTable = tables.find((t) => t.id === data.endTableId);
 
     if (!startTable || !endTable) return null;
-
-    return {
+    
+    setPathValues({
       startFieldIndex: startTable.fields.findIndex(
         (f) => f.id === data.startFieldId,
       ),
@@ -35,8 +37,8 @@ export default function Relationship({ data }) {
       endTable: { x: endTable.x, y: endTable.y },
       startTableData: startTable,
       endTableData: endTable,
-    };
-  }, [tables, data]);
+    })
+  }, [tables, data, settings.showComments]);
 
   const theme = localStorage.getItem("theme");
 
@@ -67,34 +69,36 @@ export default function Relationship({ data }) {
       break;
   }
 
-  let cardinalityStartX = 0;
-  let cardinalityEndX = 0;
-  let cardinalityStartY = 0;
-  let cardinalityEndY = 0;
-  let labelX = 0;
-  let labelY = 0;
-
   let labelWidth = labelRef.current?.getBBox().width ?? 0;
   let labelHeight = labelRef.current?.getBBox().height ?? 0;
 
   const cardinalityOffset = 28;
 
-  if (pathRef.current) {
-    const pathLength = pathRef.current.getTotalLength();
+  const [cardinalityStarts, setCardinalityStarts] = useState({ x: 0, y: 0 });
+  const [cardinalityEnds, setCardinalityEnds] = useState({ x: 0, y: 0 });
+  const [labelPoints, setLabelPoints] = useState({ x: 0, y: 0 });
+    
+  useEffect(() => {
+    if (!pathRef.current) return;
 
+    const pathLength = pathRef.current.getTotalLength();
+    
     const labelPoint = pathRef.current.getPointAtLength(pathLength / 2);
-    labelX = labelPoint.x - (labelWidth ?? 0) / 2;
-    labelY = labelPoint.y + (labelHeight ?? 0) / 2;
+    setLabelPoints({ x: labelPoint.x - labelWidth / 2, y: labelPoint.y + labelHeight / 2 });
 
     const point1 = pathRef.current.getPointAtLength(cardinalityOffset);
-    cardinalityStartX = point1.x;
-    cardinalityStartY = point1.y;
-    const point2 = pathRef.current.getPointAtLength(
-      pathLength - cardinalityOffset,
-    );
-    cardinalityEndX = point2.x;
-    cardinalityEndY = point2.y;
-  }
+    const point2 = pathRef.current.getPointAtLength(pathLength - cardinalityOffset);
+
+    setCardinalityStarts({ x: point1.x, y: point1.y });
+    setCardinalityEnds({ x: point2.x, y: point2.y });
+  }, [pathValues]);
+  
+  let cardinalityStartX = cardinalityStarts.x;
+  let cardinalityEndX = cardinalityEnds.x;
+  let cardinalityStartY = cardinalityStarts.y;
+  let cardinalityEndY = cardinalityEnds.y;
+  let labelX = labelPoints.x;
+  let labelY = labelPoints.y;
 
   const edit = () => {
     if (!layout.sidebar) {
@@ -122,6 +126,7 @@ export default function Relationship({ data }) {
   return (
     <>
       <g className="select-none group" onDoubleClick={edit}>
+        {pathValues && (
         <path
           ref={pathRef}
           d={calcPath(pathValues, settings.tableWidth)}
@@ -131,7 +136,8 @@ export default function Relationship({ data }) {
           strokeWidth={2}
           cursor="pointer"
         />
-        {settings.showRelationshipLabels && (
+        )}
+        {settings.showRelationshipLabels && pathValues && (
           <>
             <rect
               x={labelX - 2}
@@ -153,7 +159,7 @@ export default function Relationship({ data }) {
             </text>
           </>
         )}
-        {pathRef.current && settings.showCardinality && (
+        {pathRef.current && settings.showCardinality && pathValues && (
           <>
             <circle
               cx={cardinalityStartX}

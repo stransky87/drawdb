@@ -6,7 +6,7 @@ import {
   tableHeaderHeight,
   tableWidth,
 } from "../data/constants";
-import { calcPath } from "../utils/calcPath";
+import { calcPathSimple } from "../utils/calcPathSimple";
 
 function Table({ table, grab }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -120,7 +120,7 @@ function Relationship({ relationship, tables }) {
     <g className="select-none">
       <path
         ref={pathRef}
-        d={calcPath({
+        d={calcPathSimple({
           startFieldIndex: relationship.startFieldId,
           endFieldIndex: relationship.endFieldId,
           startTable: {

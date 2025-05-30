@@ -6,7 +6,7 @@ export function getTableWidth(tableData, tableWidth) {
   const { database } = useDiagram();
   
   const fieldDescLengths = tableData.fields.map((e, i) => {
-    const nameSize = e.name.length * 10;
+    const nameSize = e.name.length * 12;
 
     const typeSize =
       `${
@@ -26,6 +26,31 @@ export function getTableWidth(tableData, tableWidth) {
   const width = Math.max(Math.min(tableWidth, maxWidth), 180);
   
   return width
+}
+
+export function getSvgBoundingBox(element) {
+  const svg = document.getElementById("diagram");
+  
+  if (!element || !svg) return null;
+
+  const rect = element.getBoundingClientRect();
+  const ctm = svg.getScreenCTM()?.inverse();
+  if (!ctm) return null;
+
+  const point = svg.createSVGPoint();
+
+  point.x = rect.x;
+  point.y = rect.y;
+  const topLeft = point.matrixTransform(ctm);
+
+  point.x = rect.x + rect.width;
+  point.y = rect.y + rect.height;
+  const bottomRight = point.matrixTransform(ctm);
+
+  return {
+    y: topLeft.y,
+    height: bottomRight.y - topLeft.y,
+  };
 }
 
 /**
@@ -50,21 +75,20 @@ export function calcPath(r, tableWidth = 200, zoom = 1) {
   
   const startTableWidth = getTableWidth(r.startTableData, tableWidth) * zoom;
   const endTableWidth = getTableWidth(r.endTableData, tableWidth) * zoom;
-
+  
+  const startEl = document.getElementById(r.startTableData.fields[r.startFieldIndex].id);
+  const endEl = document.getElementById(r.endTableData.fields[r.endFieldIndex].id);
+  
+  const starTableFieldDiv = getSvgBoundingBox(startEl);
+  const endTableFieldDiv = getSvgBoundingBox(endEl);
+  
   const minwidth = Math.min(startTableWidth, endTableWidth);
   
   let x1 = r.startTable.x;
-  let y1 =
-    r.startTable.y +
-    r.startFieldIndex * tableFieldHeight +
-    tableHeaderHeight +
-    tableFieldHeight / 2;
+  let y1 = (starTableFieldDiv) ? (starTableFieldDiv.y + (starTableFieldDiv.height / 2)) : (r.startTable.y + r.startFieldIndex * tableFieldHeight + tableHeaderHeight + tableFieldHeight / 2);
+  
   let x2 = r.endTable.x;
-  let y2 =
-    r.endTable.y +
-    r.endFieldIndex * tableFieldHeight +
-    tableHeaderHeight +
-    tableFieldHeight / 2;
+  let y2 = (endTableFieldDiv) ? (endTableFieldDiv.y + (endTableFieldDiv.height / 2)) : (r.endTable.y + r.endFieldIndex * tableFieldHeight + tableHeaderHeight + tableFieldHeight / 2);
 
   let radius = 10 * zoom;
   
