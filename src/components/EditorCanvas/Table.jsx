@@ -358,7 +358,7 @@ export default function Table(props) {
           e.target.releasePointerCapture(e.pointerId);
         }}
       >
-        <div id={fieldData.id}
+        <div id={tableData['id']+"-"+tableData.fields.findIndex((f) => f.id === fieldData.id)+"-"+fieldData.id}
           className={`${
             hoveredField === index ? "text-zinc-400" : ""
           } flex items-center justify-between gap-2 overflow-hidden w-full box-border`}

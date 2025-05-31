@@ -76,8 +76,8 @@ export function calcPath(r, tableWidth = 200, zoom = 1) {
   const startTableWidth = getTableWidth(r.startTableData, tableWidth) * zoom;
   const endTableWidth = getTableWidth(r.endTableData, tableWidth) * zoom;
   
-  const startEl = document.getElementById(r.startTableData.fields[r.startFieldIndex].id);
-  const endEl = document.getElementById(r.endTableData.fields[r.endFieldIndex].id);
+  const startEl = document.getElementById(r.startTableData.id+"-"+r.startFieldIndex+"-"+r.startTableData.fields[r.startFieldIndex].id);
+  const endEl = document.getElementById(r.endTableData.id+"-"+r.endFieldIndex+"-"+r.endTableData.fields[r.endFieldIndex].id);
   
   const starTableFieldDiv = getSvgBoundingBox(startEl);
   const endTableFieldDiv = getSvgBoundingBox(endEl);
